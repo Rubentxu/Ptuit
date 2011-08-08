@@ -208,9 +208,9 @@ class MensajeController extends Controller {
 
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
-            return array('texto'=>'Eliminar favorito',
-                'mensaje'=>$mensaje, 'ruta'=>'ptuit_borra_favorito',
-                'imagen'=>'bundles/ptuit/imagenes/favorito2.jpeg');
+            return array('texto' => 'Eliminar favorito',
+                'mensaje' => $mensaje, 'ruta' => 'ptuit_borra_favorito',
+                'imagen' => 'bundles/ptuit/imagenes/favorito2.jpeg');
         }
 
         $response = new Response(json_encode(array('ERROR')));
@@ -247,8 +247,8 @@ class MensajeController extends Controller {
 
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
-            return array('texto'=>' Favorito',
-                'mensaje'=>$mensaje, 'ruta'=>'ptuit_favorito','imagen'=>
+            return array('texto' => ' Favorito',
+                'mensaje' => $mensaje, 'ruta' => 'ptuit_favorito', 'imagen' =>
                 'bundles/ptuit/imagenes/favorito.jpeg');
         }
 
@@ -256,7 +256,8 @@ class MensajeController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
-     /**
+
+    /**
      * Edits an existing Mensaje entity.
      *
      * @Route("/{id}/replicar", name="ptuit_replicar")
@@ -282,18 +283,27 @@ class MensajeController extends Controller {
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($mensaje);
             $em->flush();
+            if ($mensaje->getUsuario == $usuario) {
 
-            $response = new Response();
-            $response->headers->set('Content-Type', 'application/json');
-            return array('texto'=>'Deshacer Reptuit',
-                'mensaje'=>$mensaje, 'ruta'=>'ptuit_borra_reptuit',
-                'imagen'=>'bundles/ptuit/imagenes/reptuit.jpeg');
+                $response = new Response();
+                $response->headers->set('Content-Type', 'application/json');
+                return array('texto' => ' BORRAR',
+                    'mensaje' => $mensaje, 'ruta' => 'ptuit_borra_mensaje',
+                    'imagen' => 'bundles/ptuit/imagenes/papelera.jpeg');
+            } else {
+                $response = new Response();
+                $response->headers->set('Content-Type', 'application/json');
+                return array('texto' => 'Deshacer Reptuit',
+                    'mensaje' => $mensaje, 'ruta' => 'ptuit_borra_reptuit',
+                    'imagen' => 'bundles/ptuit/imagenes/reptuit.jpeg');
+            }
         }
 
         $response = new Response(json_encode(array('ERROR')));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
     /**
      * Edits an existing Mensaje entity.
      *
@@ -323,8 +333,8 @@ class MensajeController extends Controller {
 
             $response = new Response();
             $response->headers->set('Content-Type', 'application/json');
-            return array('texto'=>' Reptuit',
-                'mensaje'=>$mensaje, 'ruta'=>'ptuit_replicar','imagen'=>
+            return array('texto' => ' Reptuit',
+                'mensaje' => $mensaje, 'ruta' => 'ptuit_replicar', 'imagen' =>
                 'bundles/ptuit/imagenes/reptuit.jpeg');
         }
 
@@ -336,30 +346,32 @@ class MensajeController extends Controller {
     /**
      * Deletes a Mensaje entity.
      *
-     * @Route("/{id}/delete", name="ptuit_delete")
-     * @Method("post")
+     * @Route("/{id}/delete", name="ptuit_borra_mensaje")
+     * @Method("get")
      */
     public function deleteAction($id) {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+        if ('GET' === $request->getMethod()) {
 
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getEntityManager();
-                $entity = $em->getRepository('PtuitBundle:Mensaje')->find($id);
+            $em = $this->getDoctrine()->getEntityManager();
+            $entity = $em->getRepository('PtuitBundle:Mensaje')->find($id);
 
-                if (!$entity) {
-                    throw $this->createNotFoundException('Unable to find Mensaje entity.');
-                }
-
-                $em->remove($entity);
-                $em->flush();
+            if (!$entity) {
+                throw $this->createNotFoundException('Incapaz de encontrar la entidad Mensaje.');
             }
+
+            $em->remove($entity);
+            $em->flush();
+            $response = new Response(json_encode(array('OK', 'mensaje' => $entity)));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
         }
 
-        return $this->redirect($this->generateUrl('ptuit'));
+        $response = new Response(json_encode(array('KO')));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     private function createDeleteForm($id) {
