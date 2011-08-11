@@ -81,13 +81,25 @@ class MensajeController extends Controller {
      */
     public function createRespuestaAction() {
 
+       $request = $this->getRequest();
+        $id=$request->get('idPadre');
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $padre = $em->getRepository('PtuitBundle:Mensaje')->find($id);
+
+        if (!$padre) {
+            throw $this->createNotFoundException('No se encontro Mensaje Padre.');
+        }
+
         $usuario = $this->get('security.context')->getToken()->getUser();
         $mensaje = new Mensaje();
-        $request = $this->getRequest();
+        
         $mensaje->setTexto($request->get('texto'));
         $mensaje->setUsuario($usuario);
         $mensaje->setCreado(new \DateTime());
         $mensaje->setModificado(new \DateTime());
+        $mensaje->setPadre($padre);
+        $padre->addRespuestas($mensaje);
 
         $validador = $this->get('validator');
         $listaErrores = $validador->validate($mensaje);
@@ -108,6 +120,7 @@ class MensajeController extends Controller {
             } else {
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($mensaje);
+                $em->persist($padre);
                 $em->flush();
 
                 return array('mensaje' => $mensaje);

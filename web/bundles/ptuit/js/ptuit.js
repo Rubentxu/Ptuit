@@ -22,35 +22,73 @@ function gestionRespuesta(evento){
         async: true,
         type: "POST",
         dataType: "html",       
-        success:exitoResponder,
+        success:recibirForm,
         timeout: 4000,
         error: problemasEnvio
 
     });
 }
-function exitoResponder(datos){
+function recibirForm(datos){
      
-     var $dialog = $('<div></div>')
-		.html(datos)
-		.dialog({
-			autoOpen: true,
-			title: 'Responder a Ptuit',
-                        height: 300,
-			width: 650,
-			modal: true,
-			buttons: {
-				"Responder": function() {
-                                   },
-                                   "Cancelar": function() {
-					$( this ).dialog( "close" );
-				}
-				}
-				
-         
-		});
+    var $dialog = $('<div></div>')
+    .html(datos)
+    .dialog({
+        autoOpen: true,
+        title: 'Responder a Ptuit',
+        height: 300,
+        width: 620,
+        modal: true,
+        buttons: {
+            "Responder": function() {
+                                    
+                var texto=$(".txtMen2").attr("value");
+                var url=$("#formMens2").attr('action');
+                var token=$("#form__token").attr('value');
+                var id=$("#idPadre").attr('value');
+                $(".txtMen2").val("");
+                $('.contador2').text('');
+                $.ajax({
+                    url:url,
+                    async: true,
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/x-www-form-urlencoded",
+                    data:"texto="+texto+"&Mensaje[_token]="+token+"&idPadre="+id,
+                    beforeSend: function(){
+                        $(".txtMen2").addClass("txtMenCargando");
+                    },    
+                    success:function(){
+                        if(datos.texto){  
+                            var ptuit='<li> <div class="avatar"><a href="#"><img src="'+datos.avatar+'"alt="avatar"/></a></div>'+
+                            '<div class="tweetTxt"><strong><a href="#">@'+datos.nick+'</a>: </strong><p>'+
+                            datos.texto+'</p><div class="date">'+datos.creado+'<span class="ExtMens">'+
+                            '<a class="favorito" href="'+datos.ruta_favorito+'"><img src="'+datos.imgfavorito+
+                            '"/> Favorito</a>'+        
+                            '<a class="borrarMens" href="'+datos.ruta_borrar+'"><img src="'+datos.imgpapelera+'" /> Borrar</a>'+
+                            '<a href="#"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
+                            '<div class="flotarDer"><a class="verMens" href="'+datos.ruta_ver+'">ver</a></div>'+
+                            '</div></div><div class="clear"></div></li>';
+            
+                            $('ul.statuses li:first-child').before(ptuit);
+                            $("ul.statuses:empty").append(ptuit);
+                            $('#lastTweet').html($('#inputField').val());
+                            $('#inputField').val('');
+                        }else{
+                            $('#alert').html(datos[0]).alertas();            
+                        }                            
+                        $(".txtMen2").removeClass("txtMenCargando");
+                    },                    
+                    timeout: 4000,
+                    error: problemasEnvio
 
-    
-    
+                });
+                return false;                             
+            },
+            "Cancelar": function() {
+                $( this ).dialog( "close" );
+            }
+        } 
+    });
 }
 
 function gestionBorrarMens(evento){
@@ -239,20 +277,16 @@ function completadoRegistro()   {
 
 }
 
-jQuery.fn.cuentaCaracteres= function(){
-    txt=$(this);
-    var errorMensaje =$('#errorMensaje');
+jQuery.fn.cuentaCaracteres= function(){    
     
-    var contador =$('.contador');
-    txt.keyup(function(){
-        errorMensaje.text('');
-        errorMensaje.hide();
-        contador.text(': '+txt.attr("value").length+' :');
-
-    });
-    return this;
-
+    $(".txtMen").keyup(function(){       
+        $('.contador').text(': '+$(this).attr("value").length+' :');
+    });  
+    $(".txtMen2").live('keyup',function(){       
+        $('.contador2').text(': '+$(this).attr("value").length+' :');
+    }); 
 }
+
 function enviarMensaje(){
 
     var texto=$(".txtMen").attr("value");
@@ -303,6 +337,7 @@ function llegadaDatos (datos){
         $('#alert').html(datos[0]).alertas();            
     }       
     $(".txtMen").removeClass("txtMenCargando");
+    $(".txtMen2").removeClass("txtMenCargando");
 }
 function problemasEnvio(objeto, quepaso, otroobj){
     alert("Hubo un fallo en el envio AJAX... Pasó lo siguiente: "+quepaso+" "+objeto+" "+otroobj);

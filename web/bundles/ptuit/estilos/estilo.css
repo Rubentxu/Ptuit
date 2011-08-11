@@ -1869,8 +1869,8 @@ fieldset
 }
 .mensaje
 {
-    margin:  0.5em 1em ; 
-    width: 510px;
+    margin:  0.5em 1.5em ; 
+    width: 520px;
 }
 
 legend
@@ -2215,12 +2215,19 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     color: #08C;
 
 }
-.txtMen{
-    width: 500px;
+.txtMen, .txtMen2{
+    width: 520px;
     text-align: left;
     background: #FFFFFF  url('../imagenes/logotextarea.jpg') no-repeat center  ;
     
 }
 .txtMenCargando{
     background: transparent  url('../imagenes/loading.gif') no-repeat center  ;
+}
+.fieldLogin{
+    padding: 1em 2em ;
+    margin: 0 25%;
+}
+.fieldLogin input{
+    width: 420px;
 }

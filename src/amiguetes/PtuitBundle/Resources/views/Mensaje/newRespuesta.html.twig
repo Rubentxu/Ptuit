@@ -1,15 +1,15 @@
 <div class="cajaMensaje">
-    <form id="formMens" action="{{ path('ptuit_create_response') }}" method="post">
+    <form id="formMens2" action="{{ path('ptuit_create_response') }}" method="post">
         {{ form_errors(form.texto,{ 'attr': {'class': 'error','id':'errorMensaje'} }) }}
             <fieldset class="mensaje">
                 <legend>Escribe tu Respuesta</legend>
 
-                {{ form_widget(form.texto,{ 'attr': {'class': 'txtMen'} }) }}       
-                <div class="contador" ></div>    
+                {{ form_widget(form.texto,{ 'attr': {'class': 'txtMen2'} }) }}       
+                <div class="contador2" ></div>    
 
             </fieldset>
             {{ form_rest(form) }}
-            <input type="hidden" value="{{idPadre}}" name="idPadre"/>   
+            <input type="hidden" value="{{idPadre}}" id="idPadre" name="idPadre"/>   
         </form>
     </div> 
 
