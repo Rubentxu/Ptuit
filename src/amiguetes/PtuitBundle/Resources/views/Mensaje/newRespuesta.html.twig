@@ -1,0 +1,16 @@
+<div class="cajaMensaje">
+    <form id="formMens" action="{{ path('ptuit_create_response') }}" method="post">
+        {{ form_errors(form.texto,{ 'attr': {'class': 'error','id':'errorMensaje'} }) }}
+            <fieldset class="mensaje">
+                <legend>Escribe tu Respuesta</legend>
+
+                {{ form_widget(form.texto,{ 'attr': {'class': 'txtMen'} }) }}       
+                <div class="contador" ></div>    
+
+            </fieldset>
+            {{ form_rest(form) }}
+            <input type="hidden" value="{{idPadre}}" name="idPadre"/>   
+        </form>
+    </div> 
+
+

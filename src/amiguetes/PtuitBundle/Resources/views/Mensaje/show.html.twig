@@ -27,7 +27,7 @@
         </a>
     </li>
     <li>
-        <form action="{{ path('ptuit_delete', { 'id': entity.id }) }}" method="post">
+        <form action="{{ path('ptuit_borra_mensaje', { 'id': entity.id }) }}" method="post">
             {{ form_widget(delete_form) }}
                 <button type="submit">Delete</button>
             </form>

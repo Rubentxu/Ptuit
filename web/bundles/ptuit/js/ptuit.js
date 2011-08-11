@@ -7,10 +7,52 @@ $(document).ready(function(){
     $('.favorito').live('click',gestionFavoritos);
     $('.reptuit').live('click',gestionReptuit);
     $('.borrarMens').live('click',gestionBorrarMens);
-    
+    $('.responde').live('click',gestionRespuesta);
 
 
 })
+
+function gestionRespuesta(evento){
+    evento.preventDefault();
+    var ruta=$(this).attr("href");  
+   
+
+    $.ajax({
+        url:ruta,
+        async: true,
+        type: "POST",
+        dataType: "html",       
+        success:exitoResponder,
+        timeout: 4000,
+        error: problemasEnvio
+
+    });
+}
+function exitoResponder(datos){
+     
+     var $dialog = $('<div></div>')
+		.html(datos)
+		.dialog({
+			autoOpen: true,
+			title: 'Responder a Ptuit',
+                        height: 300,
+			width: 650,
+			modal: true,
+			buttons: {
+				"Responder": function() {
+                                   },
+                                   "Cancelar": function() {
+					$( this ).dialog( "close" );
+				}
+				}
+				
+         
+		});
+
+    
+    
+}
+
 function gestionBorrarMens(evento){
     
     evento.preventDefault();

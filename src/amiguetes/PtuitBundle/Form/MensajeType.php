@@ -9,7 +9,7 @@ class MensajeType extends AbstractType {
 
     public function buildForm(FormBuilder $builder, array $options) {
         $builder
-                ->add('texto');
+                ->add('texto', 'textarea');
     }
 
     public function getName() {

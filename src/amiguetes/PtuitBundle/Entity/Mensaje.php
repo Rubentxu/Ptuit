@@ -80,16 +80,40 @@ class Mensaje {
      * @Assert\NotNull
      */
     private $usuario;
-
-
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Mensaje", mappedBy="padre")
+     */
+    private $respuestas;
+    /**
+     * @ORM\ManyToOne(targetEntity="Mensaje", inversedBy="respuestas")
+     * @ORM\JoinColumn(name="padre_id", referencedColumnName="id")
+     */
+    private $padre;
 
     public function __construct() {
+        $this->respuestas=new ArrayCollection();
         $this->usuario = new ArrayCollection();
         $this->tagid = new ArrayCollection();
         $this->replicadoPorUsuario = new ArrayCollection();
         $this->usuarioDeFavoritos = new ArrayCollection();
     }
 
+    
+    public function getRespuestas() {
+        return $this->respuestas;
+    }   
+    public function addRespuestas($respuesta) {
+        $this->respuestas[] = $respuesta;
+    }
+    
+    public function getPadre() {
+        return $this->padre;
+    }
+
+       public function setPadre($padre) {
+        $this->padre = $padre;
+    }
     /**
      * Get id
      *

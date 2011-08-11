@@ -58,19 +58,63 @@ class MensajeController extends Controller {
     /**
      * Displays a form to create a new Mensaje entity.
      *
-     * @Route("/new", name="ptuit_new")
+     * @Route("/new/response/{id}", name="ptuit_respuesta")
      * @Template()
      */
-    public function newAction() {
+    public function newRespuestaAction($id) {
         $entity = new Mensaje();
         $form = $this->createForm(new MensajeType(), $entity);
 
         return array(
-            'entity' => $entity,
-            'form' => $form->createView()
+            'respuesta' => $entity,
+            'form' => $form->createView(),
+            'idPadre'=>$id
         );
     }
+    
+    /**
+     * Creates a new Mensaje entity.
+     *
+     * @Route("/create/response", name="ptuit_create_response")
+     * @Method("post")
+     * @Template("PtuitBundle:Ajax:respuestaMensaje.json.twig")
+     */
+    public function createRespuestaAction() {
 
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $mensaje = new Mensaje();
+        $request = $this->getRequest();
+        $mensaje->setTexto($request->get('texto'));
+        $mensaje->setUsuario($usuario);
+        $mensaje->setCreado(new \DateTime());
+        $mensaje->setModificado(new \DateTime());
+
+        $validador = $this->get('validator');
+        $listaErrores = $validador->validate($mensaje);
+
+// TODO Implementar recogida de tags en el texto palabras que empiecen por #
+        //$mensaje->addTagid($tagid);
+
+        if ('POST' === $request->getMethod()) {
+
+            if (count($listaErrores) > 0) {
+                $res = array();
+                foreach ($listaErrores as $value) {
+                    $res[] = $value->getMessage();
+                }
+                $response = new Response(json_encode($res));
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            } else {
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($mensaje);
+                $em->flush();
+
+                return array('mensaje' => $mensaje);
+            }
+        }
+    }
+    
     /**
      * Creates a new Mensaje entity.
      *
@@ -283,7 +327,7 @@ class MensajeController extends Controller {
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($mensaje);
             $em->flush();
-            if ($mensaje->getUsuario == $usuario) {
+            if ($mensaje->getUsuario() == $usuario) {
 
                 $response = new Response();
                 $response->headers->set('Content-Type', 'application/json');
@@ -295,7 +339,7 @@ class MensajeController extends Controller {
                 $response->headers->set('Content-Type', 'application/json');
                 return array('texto' => 'Deshacer Reptuit',
                     'mensaje' => $mensaje, 'ruta' => 'ptuit_borra_reptuit',
-                    'imagen' => 'bundles/ptuit/imagenes/reptuit.jpeg');
+                    'imagen' => 'bundles/ptuit/imagenes/reptuit2.jpeg');
             }
         }
 
@@ -376,9 +420,61 @@ class MensajeController extends Controller {
 
     private function createDeleteForm($id) {
         return $this->createFormBuilder(array('id' => $id))
-                ->add('id', 'hidden')
-                ->getForm()
+                        ->add('id', 'hidden')
+                        ->getForm()
         ;
+    }
+
+    /**
+     * Creates a new response.
+     *
+     * @Route("/create", name="ptuit_crear_respuestas")
+     * @Method("post")
+     * @Template("PtuitBundle:Ajax:respuestas.json.twig")
+     */
+    public function addRespuestaAction($id, Mensaje $respuesta) {
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $mensaje = $em->getRepository('PtuitBundle:Mensaje')->find($id);
+
+        if (!$mensaje) {
+            throw $this->createNotFoundException('Incapaz de encontrar la entidad Mensaje.');
+        }
+        $usuario = $this->get('security.context')->getToken()->getUser();
+
+        $respuesta->setPadre($mensaje);
+        $respuesta->setUsuario($usuario);
+        $respuesta->setTexto($request->get('texto'));
+        $respuesta->setCreado(new \DateTime());
+        $respuesta->setModificado(new \DateTime());
+        $mensaje->addRespuestas($respuesta);
+
+        $validador = $this->get('validator');
+        $listaErrores = $validador->validate($mensaje);
+
+// TODO Implementar recogida de tags en el texto palabras que empiecen por #
+        //$mensaje->addTagid($tagid);
+
+        if ('POST' === $request->getMethod()) {
+
+            if (count($listaErrores) > 0) {
+                $res = array();
+                foreach ($listaErrores as $value) {
+                    $res[] = $value->getMessage();
+                }
+                $response = new Response(json_encode($res));
+                $response->headers->set('Content-Type', 'application/json');
+                return $response;
+            } else {
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($respuesta);
+                $em->persist($mensaje);
+                $em->flush();
+
+                return array('mensaje' => $mensaje);
+            }
+        }
     }
 
 }

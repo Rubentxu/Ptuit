@@ -6,7 +6,7 @@
 {% endblock %}
 {% block Ptuits %}
 
-    <div id="cajaMensaje">
+    <div class="cajaMensaje">
         <form id="formMens" action="{{ path('ptuit_create') }}" method="post">
         {{ form_errors(form.texto,{ 'attr': {'class': 'error','id':'errorMensaje'} }) }}
                 <fieldset class="mensaje">
@@ -44,10 +44,17 @@
                                 <a class="borrarMens" href="{{ path('ptuit_borra_mensaje', { 'id': mensaje.id }) }}">
                                     <img src="{{ asset('bundles/ptuit/imagenes/papelera.jpeg') }}"></img> Borrar</a>
                                     {% else %}
+                                        {% if usuario in mensaje.replicadoPorUsuario %}
+                                 <a class="reptuit" href="{{ path('ptuit_borra_reptuit', { 'id': mensaje.id }) }}">
+                                     <img src="{{ asset('bundles/ptuit/imagenes/reptuit2.jpeg') }}"></img>Deshacer Reptuit</a>
+                                        {% else %}
                                  <a class="reptuit" href="{{ path('ptuit_replicar', { 'id': mensaje.id }) }}">
-                                     <img src="{{ asset('bundles/ptuit/imagenes/reptuit.jpeg') }}"></img> Reptuit</a>    
+                                     <img src="{{ asset('bundles/ptuit/imagenes/reptuit.jpeg') }}"></img> Reptuit</a>
+                                    
+                                        {% endif %}
                                     {% endif %}
-                                <a href="#"><img src="{{ asset('bundles/ptuit/imagenes/responder.jpeg') }}"></img> Responder</a>
+                                <a class="responde" href="{{ path('ptuit_respuesta', { 'id': mensaje.id }) }}">
+                                    <img src="{{ asset('bundles/ptuit/imagenes/responder.jpeg') }}"></img> Responder</a>
                             </span>
                             <div class="flotarDer"> <a class="verMens" href="{{ path('ptuit_show', { 'id': mensaje.id }) }}">ver</a></div> 
                         </div>                        
