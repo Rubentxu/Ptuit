@@ -71,7 +71,7 @@ class Perfil {
      */
     private $web;    
     /**
-     * @ORM\OneToOne(targetEntity="Usuario", inversedBy="perfil")      
+     * @ORM\OneToOne(targetEntity="Usuario", mappedBy="perfil")      
      */
     private $usuario;
     /**

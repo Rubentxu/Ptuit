@@ -44,20 +44,20 @@ class Mensaje {
      * @Assert\MaxLength(limit=160, message = "Por favor,no exceda de los 160 caracteres")
      */
     private $texto;
-    /**
-     * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="mensajesReplicados")
+     /**
+     * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="mensajesReplicados", cascade={"all"} )
      * @ORM\JoinTable(name="Mensajes_replicados_por_Usuarios",
-     *      joinColumns={@ORM\JoinColumn(name="usuario_que_replica", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="mensaje_replicado", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="mensaje_replicado", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="usuario_que_replica", referencedColumnName="id")}
      *      )
      */
     private $replicadoPorUsuario;
     /**
      * @var Usuario
      *
-     * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="mensajesFavoritos")
+     * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="mensajesFavoritos", cascade={"all"})
      * @ORM\JoinTable(name="Mensaje_favorito",
-     *   joinColumns={@ORM\JoinColumn(name="mensajeId", referencedColumnName="id")},
+     *   joinColumns={@ORM\JoinColumn(name="mensajeId", referencedColumnName="id", onDelete="CASCADE")},
      *  inverseJoinColumns={@ORM\JoinColumn(name="usuarioId", referencedColumnName="id")
      *   })
      */
@@ -65,9 +65,9 @@ class Mensaje {
     /**
      * @var Tag
      *
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="mensajeid")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="mensajeid", cascade={"all"})
      * @ORM\JoinTable(name="Mensaje_tag",
-     *   joinColumns={@ORM\JoinColumn(name="mensajeId", referencedColumnName="id")},
+     *   joinColumns={@ORM\JoinColumn(name="mensajeId", referencedColumnName="id", onDelete="CASCADE")},
      *   inverseJoinColumns={@ORM\JoinColumn(name="tagId", referencedColumnName="id")
      *   })
      */
@@ -75,25 +75,24 @@ class Mensaje {
     /**
      * @var Usuario
      *
-     * @ORM\ManyToOne(targetEntity="Usuario")     
-     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")})
+     * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="mensajes", cascade={"all"})     
+     * @ORM\JoinColumn(name="usuario_id", referencedColumnName="id")
      * @Assert\NotNull
      */
     private $usuario;
     
     /**
-     * @ORM\OneToMany(targetEntity="Mensaje", mappedBy="padre")
+     * @ORM\OneToMany(targetEntity="Mensaje", mappedBy="padre", cascade={"all"})
      */
     private $respuestas;
     /**
      * @ORM\ManyToOne(targetEntity="Mensaje", inversedBy="respuestas")
-     * @ORM\JoinColumn(name="padre_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="padre_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $padre;
 
     public function __construct() {
         $this->respuestas=new ArrayCollection();
-        $this->usuario = new ArrayCollection();
         $this->tagid = new ArrayCollection();
         $this->replicadoPorUsuario = new ArrayCollection();
         $this->usuarioDeFavoritos = new ArrayCollection();
@@ -246,7 +245,7 @@ class Mensaje {
      *
      * @param amiguetes\PtuitBundle\Entity\Usuario $usuario
      */
-    public function setUsuario(\amiguetes\PtuitBundle\Entity\Usuario $usuario) {
+    public function setUsuario($usuario) {
         $this->usuario = $usuario;
     }
 

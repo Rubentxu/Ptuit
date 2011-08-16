@@ -23,6 +23,7 @@ class Usuario implements UserInterface, \Serializable {
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
     /**
      * @var string $nick
      *
@@ -34,6 +35,7 @@ class Usuario implements UserInterface, \Serializable {
      * groups={"registro"})
      */
     private $nick;
+
     /**
      * @var string $pass
      *
@@ -47,6 +49,7 @@ class Usuario implements UserInterface, \Serializable {
      * 
      */
     private $pass;
+
     /**
      * @var string $email
      *
@@ -55,26 +58,31 @@ class Usuario implements UserInterface, \Serializable {
      * @Assert\Email(message = "Por favor, introduzca un email valido",groups={"registro"})
      */
     private $email;
+
     /**
-     * @ORM\OneToOne(targetEntity="Perfil", mappedBy="usuario", cascade={"persist", "remove"}) 
+     * @ORM\OneToOne(targetEntity="Perfil",inversedBy="usuario",cascade={"all"}) 
      * @ORM\JoinColumn(name="perfil_id", referencedColumnName="id") 
      */
     private $perfil;
+
     /**
-     * @ORM\OneToOne(targetEntity="Avatar", mappedBy="usuario", cascade={"persist", "remove"}) 
+     * @ORM\OneToOne(targetEntity="Avatar", inversedBy="usuario",cascade={"all"}) 
      * @ORM\JoinColumn(name="avatar_id", referencedColumnName="id") 
      */
     private $avatar;
+
     /**
      * @var Mensaje
      *
-     * @ORM\ManyToMany(targetEntity="Mensaje", mappedBy="$usuarioDeFavoritos")
+     * @ORM\ManyToMany(targetEntity="Mensaje", mappedBy="usuarioDeFavoritos")
      */
     private $mensajesFavoritos;
+
     /**
      * @ORM\ManyToMany(targetEntity="Usuario", mappedBy="Seguidos")
      */
     private $Seguidores;
+
     /**
      * @ORM\ManyToMany(targetEntity="Usuario", inversedBy="Seguidores")
      * @ORM\JoinTable(name="Amigos",
@@ -83,18 +91,22 @@ class Usuario implements UserInterface, \Serializable {
      *      )
      */
     private $Seguidos;
+
     /**
      * @ORM\OneToMany(targetEntity="Mensaje_Interno", mappedBy="recibidos_de_Usuario")
      */
     private $mensajesRecibidos;
+
     /**
      * @ORM\OneToMany(targetEntity="Mensaje_Interno", mappedBy="enviados_a_Usuario")
      */
     private $mensajesEnviados;
+
     /**
      * @ORM\ManyToMany(targetEntity="Mensaje", mappedBy="replicadoPorUsuario")
      */
     private $mensajesReplicados;
+
     /**
      * @ORM\ManyToMany(targetEntity="Grupo", inversedBy="usuarios")
      * @ORM\JoinTable(name="Usuario_Grupo",
@@ -103,6 +115,7 @@ class Usuario implements UserInterface, \Serializable {
      *      )
      */
     private $grupos;
+
     /**
      * @ORM\ManyToMany(targetEntity="Grupo", inversedBy="administradores")
      * @ORM\JoinTable(name="Administrador_Grupo",
@@ -112,9 +125,27 @@ class Usuario implements UserInterface, \Serializable {
      */
     private $gruposAdministrados;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Mensaje", mappedBy="usuario", cascade={"all"})
+     */
+    private $mensajes;
 
+    public function getMensajes() {
+        return $this->mensajes;
+    }
 
+    public function addMensajes(\amiguetes\PtuitBundle\Entity\Mensaje $mensaje) {
+        $this->mensajes[] = $mensaje;
+    }
 
+    public function borraMensaje(\amiguetes\PtuitBundle\Entity\Mensaje $mensaje) {
+        $this->mensajes->removeElement($mensaje);
+//        $mensaje->setUsuario(NULL);
+//        $mensaje->setPadre(NULL);
+//        $mensaje->deleteUsuarioDeFavoritos($this);
+//        $mensaje->deleteReplicadoPorUsuario($this);
+    }
+    
     function getRoles() {
         return array('ROLE_USER');
     }
@@ -142,8 +173,8 @@ class Usuario implements UserInterface, \Serializable {
         $this->mensajesRecibidos = new ArrayCollection();
         $this->mensajesEnviados = new ArrayCollection();
         $this->mensajesReplicados = new ArrayCollection();
-        $this->grupos= new ArrayCollection();
-        $this->gruposAdministrados= new ArrayCollection();
+        $this->grupos = new ArrayCollection();
+        $this->gruposAdministrados = new ArrayCollection();
     }
 
     /**
@@ -233,7 +264,7 @@ class Usuario implements UserInterface, \Serializable {
      * @param amiguetes\PtuitBundle\Entity\Mensaje $mensajeid
      */
     public function addMensajesFavoritos(\amiguetes\PtuitBundle\Entity\Mensaje $mensaje) {
-        $this->mensajesFavoritos = $mensaje;
+        $this->mensajesFavoritos[] = $mensaje;
     }
 
     /**
@@ -345,15 +376,15 @@ class Usuario implements UserInterface, \Serializable {
 
     public function serialize() {
         return serialize(array(
-            'id' => $this->getId(),
-            'nick' => $this->getNick(),
-            'email' => $this->getEmail(),
-            'pass' => $this->getPassword(),
-            'perfil' => NULL,
-            'avatar' => NULL,
-            'Seguidores' => $this->getSeguidores(),
-            'Seguidos' => $this->getSeguidos()
-        ));
+                    'id' => $this->getId(),
+                    'nick' => $this->getNick(),
+                    'email' => $this->getEmail(),
+                    'pass' => $this->getPassword(),
+                    'perfil' => NULL,
+                    'avatar' => NULL,
+                    'Seguidores' => $this->getSeguidores(),
+                    'Seguidos' => $this->getSeguidos()
+                ));
     }
 
     public function unserialize($strSerialized) {
@@ -388,14 +419,12 @@ class Usuario implements UserInterface, \Serializable {
         return $this->pass;
     }
 
-
     /**
      * Add grupos
      *
      * @param amiguetes\PtuitBundle\Entity\Grupo $grupos
      */
-    public function addGrupos(\amiguetes\PtuitBundle\Entity\Grupo $grupos)
-    {
+    public function addGrupos(\amiguetes\PtuitBundle\Entity\Grupo $grupos) {
         $this->grupos[] = $grupos;
     }
 
@@ -404,8 +433,7 @@ class Usuario implements UserInterface, \Serializable {
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getGrupos()
-    {
+    public function getGrupos() {
         return $this->grupos;
     }
 
@@ -414,8 +442,7 @@ class Usuario implements UserInterface, \Serializable {
      *
      * @param amiguetes\PtuitBundle\Entity\Grupo $gruposAdministrados
      */
-    public function addGruposAdministrados(\amiguetes\PtuitBundle\Entity\Grupo $gruposAdministrados)
-    {
+    public function addGruposAdministrados(\amiguetes\PtuitBundle\Entity\Grupo $gruposAdministrados) {
         $this->gruposAdministrados[] = $gruposAdministrados;
     }
 
@@ -424,8 +451,8 @@ class Usuario implements UserInterface, \Serializable {
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getGruposAdministrados()
-    {
+    public function getGruposAdministrados() {
         return $this->gruposAdministrados;
     }
+
 }

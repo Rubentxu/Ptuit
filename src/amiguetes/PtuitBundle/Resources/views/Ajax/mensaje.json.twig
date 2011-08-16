@@ -3,7 +3,6 @@
  'texto': mensaje.texto,
 'creado': mensaje.creado|date('d-m-Y'),
 'nick': mensaje.usuario.nick,
-'nickPadre': mensaje.padre.usuario.nick,
 'ruta_ver': path('ptuit_show', { 'id': mensaje.id }),
 'ruta_favorito': path('ptuit_favorito', { 'id': mensaje.id }),
 'ruta_borrar': path('ptuit_borra_mensaje', { 'id': mensaje.id }),

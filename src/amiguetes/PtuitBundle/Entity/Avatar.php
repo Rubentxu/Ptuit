@@ -55,7 +55,7 @@ class Avatar {
      */
     private $modificado;
     /**
-     * @ORM\OneToOne(targetEntity="Usuario", inversedBy="perfil")      
+     * @ORM\OneToOne(targetEntity="Usuario", mappedBy="perfil")      
      */
     private $usuario;
     

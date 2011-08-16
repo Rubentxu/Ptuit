@@ -20,10 +20,17 @@ class InicioController extends Controller {
 
         $em = $this->getDoctrine()->getEntityManager();
         $mensajes = $em->getRepository('PtuitBundle:Mensaje')
-                ->findCronologia($id);        
-
-        return $this->render('PtuitBundle:Inicio:index.html.twig', array('mensajes' => $mensajes,
+                ->findCronologia($id);
+        $favoritos=$em->getRepository('PtuitBundle:Mensaje')
+                ->findFavoritosDeUsuario($id);
+        $replicados=$em->getRepository('PtuitBundle:Mensaje')
+                ->findReplicadosDeUsuario($id);        
+        
+        return $this->render('PtuitBundle:Inicio:index.html.twig', 
+             array('mensajes' => $mensajes,
             'usuario' => $usuario,
+            'favoritos'=>$favoritos,
+            'replicados'=>$replicados,            
             'form' => $formulario->createView()));
     }
 

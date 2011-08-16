@@ -49,6 +49,7 @@ function recibirForm(datos){
                 $('.contador2').text('');
                 $.ajax({
                     url:url,
+                    context: $(this),
                     async: true,
                     type: "POST",
                     dataType: "json",
@@ -57,15 +58,20 @@ function recibirForm(datos){
                     beforeSend: function(){
                         $(".txtMen2").addClass("txtMenCargando");
                     },    
-                    success:function(){
+                    success:function(datos){
+                        
+                        $(".txtMen2").removeClass("txtMenCargando");
+                        $( this ).dialog( "close" );
+                       
                         if(datos.texto){  
                             var ptuit='<li> <div class="avatar"><a href="#"><img src="'+datos.avatar+'"alt="avatar"/></a></div>'+
-                            '<div class="tweetTxt"><strong><a href="#">@'+datos.nick+'</a>: </strong><p>'+
+                            '<div class="tweetTxt"><strong class="respuesta"><a href="#">Respuesta a @'+datos.nickPadre+'</a>:</strong>'+ 
+                          '<div class="clear"></div><strong><a href="#">@'+datos.nick+'</a>: </strong><p>'+
                             datos.texto+'</p><div class="date">'+datos.creado+'<span class="ExtMens">'+
                             '<a class="favorito" href="'+datos.ruta_favorito+'"><img src="'+datos.imgfavorito+
                             '"/> Favorito</a>'+        
                             '<a class="borrarMens" href="'+datos.ruta_borrar+'"><img src="'+datos.imgpapelera+'" /> Borrar</a>'+
-                            '<a href="#"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
+                            '<a class="responde" href="#"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
                             '<div class="flotarDer"><a class="verMens" href="'+datos.ruta_ver+'">ver</a></div>'+
                             '</div></div><div class="clear"></div></li>';
             
@@ -76,7 +82,7 @@ function recibirForm(datos){
                         }else{
                             $('#alert').html(datos[0]).alertas();            
                         }                            
-                        $(".txtMen2").removeClass("txtMenCargando");
+                        
                     },                    
                     timeout: 4000,
                     error: problemasEnvio
@@ -325,7 +331,7 @@ function llegadaDatos (datos){
         '<a class="favorito" href="'+datos.ruta_favorito+'"><img src="'+datos.imgfavorito+
         '"/> Favorito</a>'+        
         '<a class="borrarMens" href="'+datos.ruta_borrar+'"><img src="'+datos.imgpapelera+'" /> Borrar</a>'+
-        '<a href="#"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
+        '<a class="responde" href="#"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
         '<div class="flotarDer"><a class="verMens" href="'+datos.ruta_ver+'">ver</a></div>'+
         '</div></div><div class="clear"></div></li>';
             

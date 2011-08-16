@@ -33,3 +33,19 @@ $dql = "SELECT  m  FROM PtuitBundle:Mensaje  m, PtuitBundle:Usuario u
 
 pruebas
 
+
+SELECT *
+FROM Mensaje m
+LEFT JOIN Mensaje_favorito f ON f.mensajeId = m.id 
+LEFT JOIN Mensajes_replicados_por_Usuarios r ON r.mensaje_replicado = m.id
+LEFT JOIN Mensaje_tag t ON t.mensajeId=m.id
+WHERE m.id =16
+
+DELETE m,f,r,t
+FROM Mensaje m
+LEFT JOIN Mensaje_favorito f ON f.mensajeId = m.id 
+LEFT JOIN Mensajes_replicados_por_Usuarios r ON r.mensaje_replicado = m.id
+LEFT JOIN Mensaje_tag t ON t.mensajeId=m.id
+WHERE m.id =4
+
+

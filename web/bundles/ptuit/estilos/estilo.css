@@ -2229,5 +2229,12 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     margin: 0 25%;
 }
 .fieldLogin input{
-    width: 420px;
+    width: 400px;
+}
+.respuesta{
+    background: url('../imagenes/respuesta.jpeg') no-repeat right ;
+    display: block;
+    color: #08C;
+    float: right;
+    padding-right: 2em;
 }

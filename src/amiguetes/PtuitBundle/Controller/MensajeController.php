@@ -10,6 +10,7 @@ use amiguetes\PtuitBundle\Entity\Mensaje;
 use amiguetes\PtuitBundle\Form\MensajeType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolation;
+use amiguetes\PtuitBundle\Entity\Usuario;
 
 /**
  * Mensaje controller.
@@ -68,10 +69,10 @@ class MensajeController extends Controller {
         return array(
             'respuesta' => $entity,
             'form' => $form->createView(),
-            'idPadre'=>$id
+            'idPadre' => $id
         );
     }
-    
+
     /**
      * Creates a new Mensaje entity.
      *
@@ -81,8 +82,8 @@ class MensajeController extends Controller {
      */
     public function createRespuestaAction() {
 
-       $request = $this->getRequest();
-        $id=$request->get('idPadre');
+        $request = $this->getRequest();
+        $id = $request->get('idPadre');
         $em = $this->getDoctrine()->getEntityManager();
 
         $padre = $em->getRepository('PtuitBundle:Mensaje')->find($id);
@@ -93,7 +94,7 @@ class MensajeController extends Controller {
 
         $usuario = $this->get('security.context')->getToken()->getUser();
         $mensaje = new Mensaje();
-        
+
         $mensaje->setTexto($request->get('texto'));
         $mensaje->setUsuario($usuario);
         $mensaje->setCreado(new \DateTime());
@@ -123,17 +124,17 @@ class MensajeController extends Controller {
                 $em->persist($padre);
                 $em->flush();
 
-                return array('mensaje' => $mensaje);
+                return array('mensaje' => $mensaje, 'padre' => $padre);
             }
         }
     }
-    
+
     /**
      * Creates a new Mensaje entity.
      *
      * @Route("/create", name="ptuit_create")
      * @Method("post")
-     * @Template("PtuitBundle:Ajax:respuestaMensaje.json.twig")
+     * @Template("PtuitBundle:Ajax:mensaje.json.twig")
      */
     public function createAction() {
 
@@ -166,7 +167,7 @@ class MensajeController extends Controller {
                 $em->persist($mensaje);
                 $em->flush();
 
-                return array('mensaje' => $mensaje);
+                return array('mensaje' => $mensaje, 'padre' => $mensaje->getPadre());
             }
         }
     }
@@ -407,21 +408,15 @@ class MensajeController extends Controller {
      * @Method("get")
      */
     public function deleteAction($id) {
-        $form = $this->createDeleteForm($id);
+
         $request = $this->getRequest();
-
         if ('GET' === $request->getMethod()) {
-
+            // USO DBAL PARA BORRAR EL MENSAJE PORQUE TENIA PROBLEMAS
+            //CON EL BORRADO EN CASCADA Y TERMINABA ELIMINANDO EL USUARIO
             $em = $this->getDoctrine()->getEntityManager();
-            $entity = $em->getRepository('PtuitBundle:Mensaje')->find($id);
+            $em->getConnection()->delete('Mensaje', array('id' => $id));
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Incapaz de encontrar la entidad Mensaje.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-            $response = new Response(json_encode(array('OK', 'mensaje' => $entity)));
+            $response = new Response(json_encode(array('OK')));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }

@@ -30,10 +30,14 @@
                 <li>
                     <div class="avatar"><a href="#"><img  src="{{ asset('bundles/ptuit/imagenes/ptuit.png') }}"alt="avatar" /></a></div>
                     <div class="tweetTxt">
+                        {% if mensaje.padre %}
+                          <strong class="respuesta"><a href="#">Respuesta a @{{ mensaje.padre.usuario.nick}}</a>:</strong> 
+                          <div class="clear"></div>
+                        {% endif %}
                         <strong><a href="#">@{{ mensaje.usuario.nick}}</a>:</strong>                        
                         <p>{{ mensaje.texto }}</p>
                         <div class="date">{{ mensaje.creado|date('d-m-Y') }}
-                            <span class="ExtMens">{% if usuario in mensaje.usuarioDeFavoritos %}
+                            <span class="ExtMens">{% if mensaje in favoritos %}
                                 <a class="favorito" href="{{ path('ptuit_borra_favorito', { 'id': mensaje.id }) }}">
                                     <img src="{{ asset('bundles/ptuit/imagenes/favorito2.jpeg') }}"/> Eliminar favorito</a>            
                                     {% else %}
@@ -44,7 +48,7 @@
                                 <a class="borrarMens" href="{{ path('ptuit_borra_mensaje', { 'id': mensaje.id }) }}">
                                     <img src="{{ asset('bundles/ptuit/imagenes/papelera.jpeg') }}"></img> Borrar</a>
                                     {% else %}
-                                        {% if usuario in mensaje.replicadoPorUsuario %}
+                                        {% if mensaje in replicados %}
                                  <a class="reptuit" href="{{ path('ptuit_borra_reptuit', { 'id': mensaje.id }) }}">
                                      <img src="{{ asset('bundles/ptuit/imagenes/reptuit2.jpeg') }}"></img>Deshacer Reptuit</a>
                                         {% else %}
