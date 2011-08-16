@@ -1,5 +1,5 @@
 {# Este es la respuesta Ajax al mandar el Mensaje/Ptuit #}
-{{ { 'avatar': asset('bundles/ptuit/imagenes/ptuit.png'),
+{{ { 'avatar': asset(mensaje.usuario.avatar.filename),
  'texto': mensaje.texto,
 'creado': mensaje.creado|date('d-m-Y'),
 'nick': mensaje.usuario.nick,

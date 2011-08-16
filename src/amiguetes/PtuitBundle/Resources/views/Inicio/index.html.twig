@@ -28,7 +28,7 @@
 
     {% for mensaje in mensajes %}
                 <li>
-                    <div class="avatar"><a href="#"><img  src="{{ asset('bundles/ptuit/imagenes/ptuit.png') }}"alt="avatar" /></a></div>
+                    <div class="avatar"><a href="#"><img  src="{{ asset(mensaje.usuario.avatar.filename) }}"alt="avatar" /></a></div>
                     <div class="tweetTxt">
                         {% if mensaje.padre %}
                           <strong class="respuesta"><a href="#">Respuesta a @{{ mensaje.padre.usuario.nick}}</a>:</strong> 
