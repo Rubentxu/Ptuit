@@ -14,33 +14,39 @@ $(document).ready(function(){
 
 function gestionRespuesta(evento){
     evento.preventDefault();
-    var ruta=$(this).attr("href");  
-   
+    var ruta=$(this).attr("href");
+    
+    $(".txtMen").addClass("txtMenCargando");
 
     $.ajax({
         url:ruta,
         async: true,
         type: "POST",
         dataType: "html",       
-        success:recibirForm,
+        success:enviarForm,
         timeout: 4000,
         error: problemasEnvio
 
     });
 }
-function recibirForm(datos){
-     
-    var $dialog = $('<div></div>')
+function enviarForm(datos){
+    $(".txtMen").removeClass("txtMenCargando");
+    var $dialog = $('#dialog')
     .html(datos)
     .dialog({
-        autoOpen: true,
         title: 'Responder a Ptuit',
         height: 300,
         width: 620,
         modal: true,
+        closeOnEscape: false,
+        hide: 'clip',            
         buttons: {
             "Responder": function() {
-                                    
+                var texto=$(".txtMen").attr("value");
+                var url=$("#formMens").attr('action');
+                var token=$("#form__token").attr('value');
+                $(".txtMen").val("");
+                $('.contador').text('');  
                 var texto=$(".txtMen2").attr("value");
                 var url=$("#formMens2").attr('action');
                 var token=$("#form__token").attr('value');
@@ -66,12 +72,12 @@ function recibirForm(datos){
                         if(datos.texto){  
                             var ptuit='<li> <div class="avatar"><a href="#"><img src="'+datos.avatar+'"alt="avatar"/></a></div>'+
                             '<div class="tweetTxt"><strong class="respuesta"><a href="#">Respuesta a @'+datos.nickPadre+'</a>:</strong>'+ 
-                          '<div class="clear"></div><strong><a href="#">@'+datos.nick+'</a>: </strong><p>'+
+                            '<div class="clear"></div><strong><a href="#">@'+datos.nick+'</a>: </strong><p>'+
                             datos.texto+'</p><div class="date">'+datos.creado+'<span class="ExtMens">'+
                             '<a class="favorito" href="'+datos.ruta_favorito+'"><img src="'+datos.imgfavorito+
                             '"/> Favorito</a>'+        
                             '<a class="borrarMens" href="'+datos.ruta_borrar+'"><img src="'+datos.imgpapelera+'" /> Borrar</a>'+
-                            '<a class="responde" href="#"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
+                            '<a class="responde" href="'+datos.rutaResponder+'"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
                             '<div class="flotarDer"><a class="verMens" href="'+datos.ruta_ver+'">ver</a></div>'+
                             '</div></div><div class="clear"></div></li>';
             
@@ -95,27 +101,49 @@ function recibirForm(datos){
             }
         } 
     });
+    
+
 }
 
 function gestionBorrarMens(evento){
-    
     evento.preventDefault();
     var ruta=$(this).attr("href");  
     var nodo=$(this).parents("li");
     
-    $.ajax({
-        url:ruta,
-        context: nodo,
-        async: true,
-        type: "GET",
-        dataType: "json",       
-        success:function(datos){            
-            $(this).remove();
-        },
-        timeout: 4000,
-        error: problemasEnvio
+    $( "#dialog" ).html('<p class="error">¿De verdad quieres borrar este mensaje?.</p>')
+    .dialog({
+        title: 'Borrar este Ptuit',
+        resizable: false,
+        height:180,
+        width: 350,
+        modal: true,
+        hide: 'clip',          
+        buttons: {
+            "Borrar": function() {
+                $( this ).dialog( "close" );
+                $.ajax({
+                    url:ruta,
+                    context: nodo,
+                    async: true,
+                    type: "GET",
+                    dataType: "json",       
+                    success:function(datos){            
+                        $(this).hide(1300,function(){$(this).remove();});
+                    },
+                    timeout: 4000,
+                    error: problemasEnvio
 
+                });
+            },
+            "Cancelar": function() {
+                $( this ).dialog( "close" );
+            }
+        }
     });
+
+    
+    
+    
     
 }
 
@@ -215,6 +243,11 @@ function inicioVerMens (datos){
 }
 function llegadaDatosVerMens(datos){
     $(".bloqueContenido-body").removeClass("txtMenCargando");
+    $('.bloqueCabecera').hide(500,function(){    
+        $('.bloqueCabecera .t').html('Ver Mensaje'); 
+        $('.bloqueCabecera').show(1000);
+    });
+    
     $('.bloqueContenido-body').fadeOut(500,function(){    
         $('.bloqueContenido-body').html(datos); 
         $('.bloqueContenido-body').fadeIn(1000);
@@ -331,7 +364,7 @@ function llegadaDatos (datos){
         '<a class="favorito" href="'+datos.ruta_favorito+'"><img src="'+datos.imgfavorito+
         '"/> Favorito</a>'+        
         '<a class="borrarMens" href="'+datos.ruta_borrar+'"><img src="'+datos.imgpapelera+'" /> Borrar</a>'+
-        '<a class="responde" href="#"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
+        '<a class="responde" href="'+datos.rutaResponder+'"><img src="'+datos.imgresponder+'" /> Responder</a></span>'+
         '<div class="flotarDer"><a class="verMens" href="'+datos.ruta_ver+'">ver</a></div>'+
         '</div></div><div class="clear"></div></li>';
             
