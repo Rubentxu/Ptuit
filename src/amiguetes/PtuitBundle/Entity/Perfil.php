@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * amiguetes\PtuitBundle\Entity\Perfil
  *
  * @ORM\Table(name="Perfil")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="amiguetes\PtuitBundle\Repository\PerfilRepository")
  */
 class Perfil {
 
@@ -80,20 +80,15 @@ class Perfil {
     private $privacidad;
 
 
-    function getUsuario() {
-        return $this->usuario;
-    }
-
-    function setUsuario($usuario) {
-        $this->usuario = $usuario;
-    }
+    
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -102,7 +97,8 @@ class Perfil {
      *
      * @param string $nombre
      */
-    public function setNombre($nombre) {
+    public function setNombre($nombre)
+    {
         $this->nombre = $nombre;
     }
 
@@ -111,43 +107,48 @@ class Perfil {
      *
      * @return string 
      */
-    public function getNombre() {
+    public function getNombre()
+    {
         return $this->nombre;
     }
 
     /**
      * Set telefono
      *
-     * @param string $telefono
+     * @param integer $telefono
      */
-    public function setTelefono($telefono) {
+    public function setTelefono($telefono)
+    {
         $this->telefono = $telefono;
     }
 
     /**
      * Get telefono
      *
-     * @return string 
+     * @return integer 
      */
-    public function getTelefono() {
+    public function getTelefono()
+    {
         return $this->telefono;
     }
 
     /**
-     * Set edad
+     * Set fechaNacimiento
      *
-     * @param integer $edad
+     * @param datetime $fechaNacimiento
      */
-    public function setFechaNacimiento($fecha) {
-        $this->fechaNacimiento = $fecha;
+    public function setFechaNacimiento($fechaNacimiento)
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
     }
 
     /**
-     * Get edad
+     * Get fechaNacimiento
      *
-     * @return integer 
+     * @return datetime 
      */
-    public function getFechaNacimiento() {
+    public function getFechaNacimiento()
+    {
         return $this->fechaNacimiento;
     }
 
@@ -156,7 +157,8 @@ class Perfil {
      *
      * @param text $intereses
      */
-    public function setIntereses($intereses) {
+    public function setIntereses($intereses)
+    {
         $this->intereses = $intereses;
     }
 
@@ -165,7 +167,8 @@ class Perfil {
      *
      * @return text 
      */
-    public function getIntereses() {
+    public function getIntereses()
+    {
         return $this->intereses;
     }
 
@@ -174,7 +177,8 @@ class Perfil {
      *
      * @param text $biografia
      */
-    public function setBiografia($biografia) {
+    public function setBiografia($biografia)
+    {
         $this->biografia = $biografia;
     }
 
@@ -183,7 +187,8 @@ class Perfil {
      *
      * @return text 
      */
-    public function getBiografia() {
+    public function getBiografia()
+    {
         return $this->biografia;
     }
 
@@ -192,7 +197,8 @@ class Perfil {
      *
      * @param string $localizacion
      */
-    public function setLocalizacion($localizacion) {
+    public function setLocalizacion($localizacion)
+    {
         $this->localizacion = $localizacion;
     }
 
@@ -201,7 +207,8 @@ class Perfil {
      *
      * @return string 
      */
-    public function getLocalizacion() {
+    public function getLocalizacion()
+    {
         return $this->localizacion;
     }
 
@@ -210,7 +217,8 @@ class Perfil {
      *
      * @param string $web
      */
-    public function setWeb($web) {
+    public function setWeb($web)
+    {
         $this->web = $web;
     }
 
@@ -219,10 +227,10 @@ class Perfil {
      *
      * @return string 
      */
-    public function getWeb() {
+    public function getWeb()
+    {
         return $this->web;
     }
-
 
     /**
      * Set privacidad
@@ -242,5 +250,25 @@ class Perfil {
     public function getPrivacidad()
     {
         return $this->privacidad;
+    }
+
+    /**
+     * Set usuario
+     *
+     * @param amiguetes\PtuitBundle\Entity\Usuario $usuario
+     */
+    public function setUsuario(\amiguetes\PtuitBundle\Entity\Usuario $usuario)
+    {
+        $this->usuario = $usuario;
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return amiguetes\PtuitBundle\Entity\Usuario 
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
     }
 }

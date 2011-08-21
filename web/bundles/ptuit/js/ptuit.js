@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    
     $(".txtMen").cuentaCaracteres();
     $("#botonTxt").click(enviarMensaje);
     $("#btnRegistrar").click(registrar);
@@ -8,10 +9,34 @@ $(document).ready(function(){
     $('.reptuit').live('click',gestionReptuit);
     $('.borrarMens').live('click',gestionBorrarMens);
     $('.responde').live('click',gestionRespuesta);
+    $("ul.menu li").click(function(evento)
+    {
+        evento.preventDefault();
+        $(".capa_contenido").addClass("txtMenCargando");
+        $("ul.menu li a").removeClass("active");        
+        var ruta = $(this).find("a").addClass("active").attr("href");
+        $.ajax({
+            url:ruta,
+            async: true,
+            type: "get",
+            dataType: "html",       
+            success:gestionTabs,
+            timeout: 4000,
+            error: problemasEnvio
 
+        });
+    });
 
+    
 })
-
+function gestionTabs(datos){
+    $(".capa_contenido").removeClass("txtMenCargando");
+    $(".capa_contenido").fadeOut(1200,function(){
+        $(this).html(datos).fadeIn(1000);
+        
+    });
+    
+}
 function gestionRespuesta(evento){
     evento.preventDefault();
     var ruta=$(this).attr("href");
@@ -128,7 +153,9 @@ function gestionBorrarMens(evento){
                     type: "GET",
                     dataType: "json",       
                     success:function(datos){            
-                        $(this).hide(1300,function(){$(this).remove();});
+                        $(this).hide(1300,function(){
+                            $(this).remove();
+                        });
                     },
                     timeout: 4000,
                     error: problemasEnvio

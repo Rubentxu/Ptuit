@@ -3,6 +3,7 @@
 
 #principal, table
 {
+    width: 90%;
     font-family: Verdana, Geneva, Arial, Helvetica, Sans-Serif;
     font-size: 14px;
 }
@@ -209,6 +210,7 @@ table.position
 /* begin Box, Sheet */
 .pagina
 {
+    
     position: relative;
     margin: 0 auto;
     min-width: 71px;
@@ -313,6 +315,7 @@ table.position
 
 .pagina
 {
+    
     top: 35px !important;
     margin-bottom: 35px !important;
     cursor:auto;
@@ -348,7 +351,7 @@ div.cabecera-png
     top: 0;
     width: 974px;
     height: 150px;
-    background-image: url('../imagenes/header.png');
+    background-image: url('../imagenes/headerb.jpg');
     background-repeat: no-repeat;
     background-position:center center; 
 }
@@ -514,6 +517,7 @@ h2.logotipo-texto
 
 .Bnavegacion
 {
+    background-color: Transparent;
     position: relative;
     min-height: 48px;
     z-index: 100;
@@ -872,9 +876,10 @@ h2.logotipo-texto
 
 .bloqueContenido-body
 {
+    width: 100%;
     position: relative;
     padding: 8px;
-    min-height: 700px;
+    
 }
 
 .bloqueContenido-tr, .bloqueContenido-tl, .bloqueContenido-br, .bloqueContenido-bl, .bloqueContenido-tc, .bloqueContenido-bc,.bloqueContenido-cr, .bloqueContenido-cl
@@ -2208,7 +2213,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     height: 0;
     color: #c00;
     font: 20px/40px arial, sans-serif;
-    opacity: .8;
+    opacity: .6;
 }
 .ExtMens a{
     padding-left: 1em;
@@ -2237,4 +2242,11 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     color: #08C;
     float: right;
     padding-right: 2em;
+}
+.mensajeId td{
+    float: right;    
+}
+.mensajeId th{
+    
+    vertical-align: top;
 }

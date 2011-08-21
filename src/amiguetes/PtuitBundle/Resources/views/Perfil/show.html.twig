@@ -1,0 +1,30 @@
+<h1>Perfil de @{{ entity.usuario.nick }}</h1>
+
+<table class="record_properties">
+    <tbody>
+               <tr>
+            <th>Nombre</th>                <td>{{ entity.nombre }}</td>        </tr>
+        <tr>
+            <th>Telefono</th>                <td>{{ entity.telefono }}</td>        </tr>
+        <tr>
+            <th>Fechanacimiento</th>                <td>{{ entity.fechaNacimiento|date('H:i:s d-m-Y ') }}</td>        </tr>
+        <tr>
+            <th>Intereses</th>                <td>{{ entity.intereses }}</td>        </tr>
+        <tr>
+            <th>Biografia</th>                <td>{{ entity.biografia }}</td>        </tr>
+        <tr>
+            <th>Localizacion</th>                <td>{{ entity.localizacion }}</td>        </tr>
+        <tr>
+            <th>Web</th>                <td>{{ entity.web }}</td>        </tr>
+        <tr>
+            <th>Privacidad</th>                <td>{{ entity.privacidad }}</td>        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions">
+     <li>
+        <a href="{{ path('perfil_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>  
+</ul>

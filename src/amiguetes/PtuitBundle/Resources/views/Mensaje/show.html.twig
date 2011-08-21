@@ -1,35 +1,27 @@
 <h1>Mensaje</h1>
 
-<table class="record_properties">
-    <tbody>
+<table class="mensajeId">
+    <tbody>        
         <tr>
-            <th>Id</th>                <td>{{ entity.id }}</td>        </tr>
+            <th>Propietario:</th>                <td>@{{ entity.usuario.nick }}</td>        </tr>
         <tr>
-            <th>Nick</th>                <td>{{ entity.usuario.nick }}</td>        </tr>
+            <th>Creado:</th>                <td>{{ entity.creado|date('Y-m-d H:i:s') }}</td>        </tr>
         <tr>
-            <th>Creado</th>                <td>{{ entity.creado|date('Y-m-d H:i:s') }}</td>        </tr>
+            <th>Modificado:</th>                <td>{{ entity.modificado|date('Y-m-d H:i:s') }}</td>        </tr>
         <tr>
-            <th>Modificado</th>                <td>{{ entity.modificado|date('Y-m-d H:i:s') }}</td>        </tr>
+            <th>Texto:</th>                <td>{{ entity.texto }}</td>        </tr>
         <tr>
-            <th>Texto</th>                <td>{{ entity.texto }}</td>        </tr>
-    </tbody>
+            <th>Replicado:</th>                <td>{{ entity.replicadoPorUsuario |length}} veces replicado</td>        </tr>
+        <tr>
+            <th>Favorito:</th>                <td>a {{ entity.usuarioDeFavoritos |length}} usuarios le gustan</td>        </tr>
+        <tr>
+            <th>Tag:</th>                <td>{{ entity.tagid |length}} etiquetas</td></tr>
+        <tr>
+    {% if entity.padre %}        
+                <th>Respuesta a:</th>   <td>@{{ entity.padre.usuario.nick  }}</td></tr>
+        <th>Texto Mensaje:</th>                <td>{{ entity.padre.texto  }} </td></tr>
+        {% endif %}
+</tbody>
 </table>
 
-<ul class="record_actions">
-    <li>
-        <a href="{{ path('ptuit') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('ptuit_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('ptuit_borra_mensaje', { 'id': entity.id }) }}" method="post">
-            {{ form_widget(delete_form) }}
-                <button type="submit">Delete</button>
-            </form>
-        </li>
-    </ul>
+

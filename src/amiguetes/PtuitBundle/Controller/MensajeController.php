@@ -19,18 +19,33 @@ use amiguetes\PtuitBundle\Entity\Usuario;
  */
 class MensajeController extends Controller {
 
-    /**
-     * Lists all Mensaje entities.
-     *
-     * @Route("/", name="ptuit")
+    /**    
+     * @Route("/cronologia", name="ptuit")
      * @Template()
      */
     public function indexAction() {
+        $usuario = $this->get('security.context')->getToken()->getUser();
+
+        $mensaje = new Mensaje();
+        $formulario = $this->createFormBuilder($mensaje)
+                ->add('texto', 'textarea')
+                ->getForm();
+
+        $id = $usuario->getId();
+
         $em = $this->getDoctrine()->getEntityManager();
+        $mensajes = $em->getRepository('PtuitBundle:Mensaje')
+                ->findCronologia($id);
+        $favoritos = $em->getRepository('PtuitBundle:Mensaje')
+                ->findFavoritosDeUsuario($id);
+        $replicados = $em->getRepository('PtuitBundle:Mensaje')
+                ->findReplicadosDeUsuario($id);
 
-        $entities = $em->getRepository('PtuitBundle:Mensaje')->findAll();
-
-        return array('entities' => $entities);
+        return array('mensajes' => $mensajes,
+                    'usuario' => $usuario,
+                    'favoritos' => $favoritos,
+                    'replicados' => $replicados,
+                    'form' => $formulario->createView());
     }
 
     /**
@@ -47,12 +62,10 @@ class MensajeController extends Controller {
         if (!$entity) {
             throw $this->createNotFoundException('Incapaz de encontrar entidad Mensaje.');
         }
-
-        $deleteForm = $this->createDeleteForm($id);
+        
 
         return array(
-            'entity' => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,            
         );
     }
 
@@ -483,6 +496,34 @@ class MensajeController extends Controller {
                 return array('mensaje' => $mensaje);
             }
         }
+    }
+
+    /**
+     * @Route("/misptuits", name="ptuit_mis_ptuits")
+     * @Method("get")    
+     */
+    public function misPtuitsAction() {
+
+        $usuario = $this->get('security.context')->getToken()->getUser();
+        $id=$usuario->getId();
+        $mensaje = new Mensaje();
+        $formulario = $this->createFormBuilder($mensaje)
+                ->add('texto', 'textarea')
+                ->getForm();        
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $mensajes = $em->getRepository('PtuitBundle:Mensaje')
+                ->findMisPtuits($id);
+        $favoritos = $em->getRepository('PtuitBundle:Mensaje')
+                ->findFavoritosDeUsuario($id);
+        $replicados = $em->getRepository('PtuitBundle:Mensaje')
+                ->findReplicadosDeUsuario($id);
+
+        return $this->render('PtuitBundle:Mensaje:misPtuits.html.twig', array('mensajes' => $mensajes,
+                    'usuario' => $usuario,
+                    'favoritos' => $favoritos,
+                    'replicados' => $replicados,
+                    'form' => $formulario->createView()));
     }
 
 }

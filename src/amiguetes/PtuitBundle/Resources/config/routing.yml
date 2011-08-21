@@ -6,6 +6,10 @@ _ptuits:
     resource: "@PtuitBundle/Controller/MensajeController.php"
     type:     annotation
     
+_perfil:
+    resource: "@PtuitBundle/Controller/PerfilController.php"
+    type:      annotation
+    
 registro:
     pattern:   /registro
     defaults:  { _controller: PtuitBundle:Security:registro }

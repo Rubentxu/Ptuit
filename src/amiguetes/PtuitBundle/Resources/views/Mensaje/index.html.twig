@@ -1,43 +1,68 @@
-<h1>Mensaje list</h1>
+<div class="cajaMensaje">
+    <form id="formMens" action="{{ path('ptuit_create') }}" method="post">
+        {{ form_errors(form.texto,{ 'attr': {'class': 'error','id':'errorMensaje'} }) }}
+            <fieldset class="mensaje">
+                <legend>Escribe tu ptuit</legend>
 
-<table class="records_list">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nombreusuario</th>
-            <th>Creado</th>
-            <th>Modificado</th>
-            <th>Texto</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for entity in entities %}
-        <tr>
-            <td><a href="{{ path('ptuit_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-            <td>{{ entity.nombreusuario }}</td>
-            <td>{{ entity.creado|date('Y-m-d H:i:s') }}</td>
-            <td>{{ entity.modificado|date('Y-m-d H:i:s') }}</td>
-            <td>{{ entity.texto }}</td>
-            <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('ptuit_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('ptuit_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
+
+                {{ form_widget(form.texto,{ 'attr': {'class': 'txtMen', 'cols':'52', 'rows':'2' } }) }}       
+                <div class="contador" ></div>
+                <input id="botonTxt" title="enviar" name="ptuit" value="ptuit.." type="submit"/>
+
+            </fieldset>
+            {{ form_rest(form) }}
+        </form>
+    </div>   
+
+    <h1>Cronologia</h1>
+    <div id="caja_men" >
+        <ul class="statuses">
+
+    {% for mensaje in mensajes %}
+            <li>
+                <div class="avatar"><a href="#"><img  src="{{ asset(mensaje.usuario.avatar.filename) }}"alt="avatar" /></a></div>
+                <div class="tweetTxt">
+                        {% if mensaje.padre %}
+                        <strong class="respuesta"><a href="#">Respuesta a @{{ mensaje.padre.usuario.nick}}</a>:</strong> 
+                        <div class="clear"></div>
+                        {% endif %}
+                        <strong><a href="#">@{{ mensaje.usuario.nick}}</a>:</strong>                        
+                        <p>{{ mensaje.texto }}</p>
+                        <div class="date">{{ mensaje.creado|date('d-m-Y') }}
+                            <span class="ExtMens">{% if mensaje in favoritos %}
+                                <a class="favorito" href="{{ path('ptuit_borra_favorito', { 'id': mensaje.id }) }}">
+                                    <img src="{{ asset('bundles/ptuit/imagenes/favorito2.jpeg') }}"/> Eliminar favorito</a>            
+                                    {% else %}
+                                <a class="favorito" href="{{ path('ptuit_favorito', { 'id': mensaje.id }) }}">
+                                    <img src="{{ asset('bundles/ptuit/imagenes/favorito.jpeg') }}"/> Favorito</a>
+                                    {% endif %}
+                                    {% if usuario == mensaje.usuario %}
+                                <a class="borrarMens" href="{{ path('ptuit_borra_mensaje', { 'id': mensaje.id }) }}">
+                                    <img src="{{ asset('bundles/ptuit/imagenes/papelera.jpeg') }}"></img> Borrar</a>
+                                    {% else %}
+                                        {% if mensaje in replicados %}
+                                <a class="reptuit" href="{{ path('ptuit_borra_reptuit', { 'id': mensaje.id }) }}">
+                                    <img src="{{ asset('bundles/ptuit/imagenes/reptuit2.jpeg') }}"></img>Deshacer Reptuit</a>
+                                        {% else %}
+                                <a class="reptuit" href="{{ path('ptuit_replicar', { 'id': mensaje.id }) }}">
+                                    <img src="{{ asset('bundles/ptuit/imagenes/reptuit.jpeg') }}"></img> Reptuit</a>
+
+                                        {% endif %}
+                                    {% endif %}
+                                <a class="responde" href="{{ path('ptuit_respuesta', { 'id': mensaje.id }) }}">
+                                    <img src="{{ asset('bundles/ptuit/imagenes/responder.jpeg') }}"></img> Responder</a>
+                            </span>
+                            <div class="flotarDer"> <a class="verMens" href="{{ path('ptuit_show', { 'id': mensaje.id }) }}">ver</a></div> 
+                        </div>                        
+                    </div>
+
+                    <div class="clear"></div>
+                </li>
+    {% else %}
+                <li><a href="#"><img class="avatar" src="{{ asset('bundles/ptuit/imagenes/ptuit.png') }}"  alt="avatar" /></a>
+                    Escribe tu Ptuit y se mostrara aqui, los tuyos y los de tus amigos.
+                </li>
     {% endfor %}
-    </tbody>
-</table>
 
-<ul>
-    <li>
-        <a href="{{ path('ptuit_new') }}">
-            Create a new entry
-        </a>
-    </li>
-</ul>
+            </ul>        
+        </div>

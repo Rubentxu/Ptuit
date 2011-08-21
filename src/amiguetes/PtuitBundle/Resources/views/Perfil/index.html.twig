@@ -1,0 +1,51 @@
+<h1>Perfil list</h1>
+
+<table class="records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Telefono</th>
+            <th>Fechanacimiento</th>
+            <th>Intereses</th>
+            <th>Biografia</th>
+            <th>Localizacion</th>
+            <th>Web</th>
+            <th>Privacidad</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+        <tr>
+            <td><a href="{{ path('perfil_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{{ entity.nombre }}</td>
+            <td>{{ entity.telefono }}</td>
+            <td>{{ entity.fechaNacimiento|date('Y-m-d H:i:s') }}</td>
+            <td>{{ entity.intereses }}</td>
+            <td>{{ entity.biografia }}</td>
+            <td>{{ entity.localizacion }}</td>
+            <td>{{ entity.web }}</td>
+            <td>{{ entity.privacidad }}</td>
+            <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('perfil_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('perfil_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<ul>
+    <li>
+        <a href="{{ path('perfil_new') }}">
+            Create a new entry
+        </a>
+    </li>
+</ul>
