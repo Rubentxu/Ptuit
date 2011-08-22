@@ -807,7 +807,16 @@ h2.logotipo-texto
     padding: 0;
 
 }
-
+.capa_contenido{
+    float: left;
+    width: 590px;
+}
+.capa_barraLateral{
+    padding: 7px;
+    float: right;
+    width: 370px;
+   
+}
 
 
 
@@ -2083,7 +2092,7 @@ td.key
     background-image: none;
 }
 .cajaMensaje{
-    width: 520px;   
+       
     font-family: sans-serif;
 
 }
@@ -2113,8 +2122,8 @@ td.key
 .avatar{
     min-height: 48px;
     min-width: 48px;
-    max-height: 50;
-    max-width: 50;    
+    max-height: 50px;
+    max-width: 50px;    
     margin:18px 10px;
     border:0px solid #0B3850;
     float: left;
@@ -2172,12 +2181,13 @@ ul.statuses{
 }
 
 ul.statuses li {
-
+    min-height: 115px;
     border-bottom:1px solid #505660;
     padding:10px 0px ;
-    *padding:10px 10px;
+    *padding:13px 5px 0px 0px;    
     list-style:none;
     font-size:14px;
+    
 }
 
 ul.statuses li:first-child{

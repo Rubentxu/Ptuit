@@ -5,27 +5,22 @@
         <title>{% block title %}Ptuit{% endblock %}</title>
 
     {% block stylesheets %}
-        {%  stylesheets filter="cssrewrite,yui_css" output="css/all.css"
+        {%  stylesheets filter="cssrewrite,?yui_css" output="css/all.css"
         'bundles/ptuit/estilos/estilo.css'
         'bundles/ptuit/estilos/jquery-ui.css'        
         %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css" media="screen" />
-        {%  endstylesheets %}
-      <!--<link rel="stylesheet" href="{{ asset('bundles/ptuit/estilos/estilo.css') }}" type="text/css" media="screen" />
-        <link rel="stylesheet" href="{{ asset('bundles/ptuit/estilos/jquery-ui.css') }}" type="text/css" media="screen" />
-       [if IE 6]><link rel="stylesheet" href="{{ asset('bundles/ptuit/estilos/estilo.ie6.css') }}" type="text/css" media="screen" /><![endif]-->
+        {%  endstylesheets %}     
+       <!--[if IE 6]><link rel="stylesheet" href="{{ asset('bundles/ptuit/estilos/estilo.ie6.css') }}" type="text/css" media="screen" /><![endif]-->
         <!--[if IE 7]><link rel="stylesheet" href="{{ asset('bundles/ptuit/estilos/estilo.ie7.css') }}" media="screen" /><![endif]-->
     {% endblock %}
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     {% block javascripts %}
         {% javascripts 'bundles/ptuit/js/jquery.js' 'bundles/ptuit/js/jquery-ui.js' 
-    'bundles/ptuit/js/ptuit.js' filter='yui_js' output="css/all.js" %}
+    'bundles/ptuit/js/ptuit.js' filter='?yui_js' output="css/all.js" %}
         <script type="text/javascript"  src="{{ asset_url }}"></script>
         {% endjavascripts %}
-       <!--<script type="text/javascript" src="{{ asset('bundles/ptuit/js/jquery.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/ptuit/js/jquery-ui.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/ptuit/js/ptuit.js') }}"></script>
-        -->
+     
     {% endblock %}
     </head>
     <body>
@@ -151,7 +146,7 @@
                                                         <div class="cleared"></div>
                                                     </div>
 
-                                                    <div class="capa barraLateral">
+                                                    <div class="capa_barraLateral">
                                                     {% block bloquesLaterales %}
                                                             <div class="bloque">
                                                                 <div class="bloque-body">

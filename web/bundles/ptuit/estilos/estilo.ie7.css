@@ -169,7 +169,7 @@ img
 /* end Footer */
 
 /* begin LayoutCell, content */
-.barraLateral {width: auto;}
+.barraLateral {width: 352;}
 .contenido .capa, .contenido .capa .contenido .capa
 {
   display: block;
@@ -194,4 +194,23 @@ img
 .nspro_bg_wrap .art-button-wrapper a
 {
   float: none !important;
+}
+.capa_contenido{
+    float: left;
+    width: 570px;
+}
+.capa_barraLateral{
+    padding: 0px;
+    float: right;
+    width: 380px;
+   
+}
+.txtMen, .txtMen2{
+    width: 475px;
+    height: 50px;
+    overflow: hidden;
+}
+.tweetTxt{
+    position: absolute;
+    width: 490px;
 }

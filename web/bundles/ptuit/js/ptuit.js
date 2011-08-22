@@ -1,34 +1,61 @@
 $(document).ready(function(){
     
-    $(".txtMen").cuentaCaracteres();
-    $("#botonTxt").click(enviarMensaje);
-    $("#btnRegistrar").click(registrar);
-    $('.verMens').live('click', verMens);   
-    $('#alert').alertas();
+    
+    $("#botonTxt").click(enviarMensaje); 
     $('.favorito').live('click',gestionFavoritos);
+    $('.verMens').live('click', verMens);        
     $('.reptuit').live('click',gestionReptuit);
     $('.borrarMens').live('click',gestionBorrarMens);
     $('.responde').live('click',gestionRespuesta);
-    $("ul.menu li").click(function(evento)
-    {
-        evento.preventDefault();
-        $(".capa_contenido").addClass("txtMenCargando");
-        $("ul.menu li a").removeClass("active");        
-        var ruta = $(this).find("a").addClass("active").attr("href");
-        $.ajax({
-            url:ruta,
-            async: true,
-            type: "get",
-            dataType: "html",       
-            success:gestionTabs,
-            timeout: 4000,
-            error: problemasEnvio
-
-        });
+    $("ul.menu li").click(gestionMenu);    
+    $(".txtMen").keyup(function(){       
+        $('.contador').text(': '+$(this).attr("value").length+' :');
     });
-
+    $(".txtMen2").live('keyup',function(){       
+        $('.contador2').text(': '+$(this).attr("value").length+' :');
+    }); 
+    
+    $.timer(30000, function(){
+        
+        }); 
+    
+    $('#alert').bind('click',alertas);
+    $('#alert').trigger('click');
+       
+   
     
 })
+function alertas(){
+    var alertas = $(this);
+    if((alertas.text()).trim().length>0)
+    {
+        alertas.animate({
+            height: alertas.css('line-height') || '50px'
+        }, 800,function () {
+            alertas.delay(2500).animate({
+                height: '0'
+            }, 1200);
+        });
+    }    
+}
+
+function gestionMenu(evento)
+{
+    evento.preventDefault();
+    $(".capa_contenido").addClass("txtMenCargando");
+    $("ul.menu li a").removeClass("active");        
+    var ruta = $(this).find("a").addClass("active").attr("href");
+    $.ajax({
+        url:ruta,
+        cache: false,            
+        type: "GET",
+        dataType: "html", 
+        success:gestionTabs,
+        timeout: 4000,
+        error: problemasEnvio
+
+    });
+}
 function gestionTabs(datos){
     $(".capa_contenido").removeClass("txtMenCargando");
     $(".capa_contenido").fadeOut(1200,function(){
@@ -111,7 +138,8 @@ function enviarForm(datos){
                             $('#lastTweet').html($('#inputField').val());
                             $('#inputField').val('');
                         }else{
-                            $('#alert').html(datos[0]).alertas();            
+                            $('#alert').html(datos[0]); 
+                            $('#alert').trigger('click');
                         }                            
                         
                     },                    
@@ -148,6 +176,7 @@ function gestionBorrarMens(evento){
                 $( this ).dialog( "close" );
                 $.ajax({
                     url:ruta,
+                    cache: false,
                     context: nodo,
                     async: true,
                     type: "GET",
@@ -175,26 +204,27 @@ function gestionBorrarMens(evento){
 }
 
 function gestionFavoritos(evento){
-    
+   
     evento.preventDefault();
     var ruta=$(this).attr("href");  
     
     $.ajax({
         url:ruta,
-        context: $(this),
-        async: true,
+        cache: false,
+        context: $(this),        
         type: "GET",
         dataType: "json",       
-        success:function(datos){
-            $(this).attr('href', datos.ruta);
-            var html='<img src="'+datos.imagen+'"> '+datos.texto+'</img>';        
-            $(this).html(html);    
-        },
+        success:respuestaFavoritos,
         timeout: 4000,
         error: problemasEnvio
 
     });
     
+}
+function respuestaFavoritos (datos){    
+    $(this).attr('href', datos.ruta);
+    var html='<img src="'+datos.imagen+'"> '+datos.texto+'</img>';        
+    $(this).html(html);   
 }
 
 function gestionReptuit(evento){
@@ -204,10 +234,11 @@ function gestionReptuit(evento){
     
     $.ajax({
         url:ruta,
+        cache: false,        
         context: $(this),
         async: true,
         type: "GET",
-        dataType: "json",       
+        dataType: "json",              
         success:function(datos){
             $(this).attr('href', datos.ruta);
             var html='<img src="'+datos.imagen+'"> '+datos.texto+'</img>';        
@@ -221,27 +252,6 @@ function gestionReptuit(evento){
 }
 
 
-jQuery.fn.alertas= function(){
-    var alertas = $(this);
-    
-    if(($(this).text()).trim().length>0)
-    {
-        var alerttimer = window.setTimeout(function () {
-            alertas.trigger('click');
-        }, 3000);
-        alertas.animate({
-            height: alertas.css('line-height') || '50px'
-        }, 200)
-        .click(function () {
-            window.clearTimeout(alerttimer);
-            alertas.animate({
-                height: '0'
-            }, 200);
-        });
-    }
-	
-    
-}
 
 function verMens(evento){   
     
@@ -250,12 +260,10 @@ function verMens(evento){
     
     $.ajax({
         url:ruta,
-        async: true,
         type: "GET",
         dataType: "html",        
         beforeSend: inicioVerMens,
-        success:llegadaDatosVerMens,
-        complete: completadoVerMens,
+        success:llegadaDatosVerMens,        
         timeout: 4000,
         error: problemasEnvio
 
@@ -284,75 +292,6 @@ function llegadaDatosVerMens(datos){
     
 
 }
-function completadoVerMens()   {
-    
-}
-
-function registrar(){
-
-    var usuario=$("#nickR").attr("value");
-    var pass=$("#passR").attr("value");
-    var pass2=$("#passR2").attr("value");
-    var correo=$("#correo").attr("value");
-    $.ajax({
-        url:"index.php",
-        async: true,
-        type: "POST",
-        dataType: "json",
-        contentType: "application/x-www-form-urlencoded",
-        data:"controlador=usuario&accion=crearUsuario&formulario=Registro&usuario="+usuario+"&pass="+pass+"&pass2="+pass2+"&correo="+correo,
-        beforeSend: inicioRegistro,
-        success:llegadaDatosRegistro,
-        complete: completadoRegistro,
-        timeout: 4000,
-        error: problemasEnvio
-
-    });
-
-
-}
-function inicioRegistro (datos){
-
-    $("#panel2").addClass("txtMenCargando");
-
-
-}
-function llegadaDatosRegistro(datos){
-    if(datos.validado=='FALSE'){
-        var errorMensaje =$('#errorFormRegistro');
-        errorMensaje.text(datos.msgError);
-        errorMensaje.show('slow');
-
-    }else {
-        
-        $('#panel').hide();
-        $('#panel2').hide();
-        $("#panel").removeClass("txtMenCargando");
-        $("#pass").val("");
-        $("#nick").val("");
-        $("#pass2").val("");
-        $("#correo").val("");
-    }   
-
-
-}
-function completadoRegistro()   {
-    $("#panel2").removeClass("txtMenCargando");
-    $("#passR").val("")
-    $("#nickR").val("");
-
-}
-
-jQuery.fn.cuentaCaracteres= function(){    
-    
-    $(".txtMen").keyup(function(){       
-        $('.contador').text(': '+$(this).attr("value").length+' :');
-    });  
-    $(".txtMen2").live('keyup',function(){       
-        $('.contador2').text(': '+$(this).attr("value").length+' :');
-    }); 
-}
-
 function enviarMensaje(){
 
     var texto=$(".txtMen").attr("value");
@@ -368,8 +307,7 @@ function enviarMensaje(){
         contentType: "application/x-www-form-urlencoded",
         data:"texto="+texto+"&Mensaje[_token]="+token,
         beforeSend: inicioEnvio,    
-        success:llegadaDatos,
-        complete: completado,
+        success:llegadaDatos,        
         timeout: 4000,
         error: problemasEnvio
 
@@ -400,7 +338,8 @@ function llegadaDatos (datos){
         $('#lastTweet').html($('#inputField').val());
         $('#inputField').val('');
     }else{
-        $('#alert').html(datos[0]).alertas();            
+        $('#alert').html(datos[0]);
+        $('#alert').trigger('click');
     }       
     $(".txtMen").removeClass("txtMenCargando");
     $(".txtMen2").removeClass("txtMenCargando");
@@ -409,11 +348,28 @@ function problemasEnvio(objeto, quepaso, otroobj){
     alert("Hubo un fallo en el envio AJAX... Pasó lo siguiente: "+quepaso+" "+objeto+" "+otroobj);
 
 }
-function completado(exito){
-    
-
-    if(exito=="success"){
-        alert("Y con éxito");
-    }
-
-}
+jQuery.timer = function (interval, callback) { 
+    var interval = interval || 100;
+    if (!callback)
+        return false;	
+    _timer = function (interval, callback) {
+        this.stop = function () {
+            clearInterval(self.id);
+        };		
+        this.internalCallback = function () {
+            callback(self);
+        };		
+        this.reset = function (val) {
+            if (self.id)
+                clearInterval(self.id);
+			
+            var val = val || 100;
+            this.id = setInterval(this.internalCallback, val);
+        };		
+        this.interval = interval;
+        this.id = setInterval(this.internalCallback, this.interval);
+		
+        var self = this;
+    };	
+    return new _timer(interval, callback);
+};
