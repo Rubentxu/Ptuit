@@ -205,8 +205,13 @@ img
     width: 380px;
    
 }
-.txtMen, .txtMen2{
+.txtMen {
     width: 475px;
+    height: 50px;
+    overflow: hidden;
+}
+.txtMen2 {
+     width: 455px;
     height: 50px;
     overflow: hidden;
 }

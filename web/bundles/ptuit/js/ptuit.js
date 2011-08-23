@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     
-    $("#botonTxt").click(enviarMensaje); 
+    $("#botonTxt").live('click',enviarMensaje); 
     $('.favorito').live('click',gestionFavoritos);
     $('.verMens').live('click', verMens);        
     $('.reptuit').live('click',gestionReptuit);
@@ -14,21 +14,17 @@ $(document).ready(function(){
     $(".txtMen2").live('keyup',function(){       
         $('.contador2').text(': '+$(this).attr("value").length+' :');
     }); 
-    
-    $.timer(30000, function(){
-        
-        }); 
-    
-    $('#alert').bind('click',alertas);
+    $('#alert').live('click',alertas);
     $('#alert').trigger('click');
-       
-   
+     
     
 })
 function alertas(){
-    var alertas = $(this);
-    if((alertas.text()).trim().length>0)
+   
+    var alertas = $('#alert');   
+    if($.trim(alertas.text()).length>5)
     {
+         
         alertas.animate({
             height: alertas.css('line-height') || '50px'
         }, 800,function () {
@@ -42,7 +38,7 @@ function alertas(){
 function gestionMenu(evento)
 {
     evento.preventDefault();
-    $(".capa_contenido").addClass("txtMenCargando");
+    $(".bloqueContenido-body").addClass("txtMenCargando");  
     $("ul.menu li a").removeClass("active");        
     var ruta = $(this).find("a").addClass("active").attr("href");
     $.ajax({
@@ -57,12 +53,12 @@ function gestionMenu(evento)
     });
 }
 function gestionTabs(datos){
-    $(".capa_contenido").removeClass("txtMenCargando");
+    
     $(".capa_contenido").fadeOut(1200,function(){
         $(this).html(datos).fadeIn(1000);
         
     });
-    
+    $(".bloqueContenido-body").removeClass("txtMenCargando");    
 }
 function gestionRespuesta(evento){
     evento.preventDefault();

@@ -880,6 +880,11 @@ h2.logotipo-texto
 {
     position: relative;    
     min-width: 11px;
+    min-height: 1920px;
+}
+.loginContenido{
+    position: relative;    
+    min-width: 11px;
     min-height: 300px;
 }
 
@@ -2223,7 +2228,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
     height: 0;
     color: #c00;
     font: 20px/40px arial, sans-serif;
-    opacity: .6;
+    opacity: .8;
 }
 .ExtMens a{
     padding-left: 1em;
